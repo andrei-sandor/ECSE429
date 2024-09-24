@@ -97,6 +97,44 @@ public class testsTodo {
     }
 
     @Test
+    public void postTodosNoDescription(){
+        JSONObject body = new JSONObject();
+        body.put("title", "title2");
+        body.put("doneStatus", true);
+
+        Response res = RestAssured.given()
+                .body(body.toString())
+                .post("http://localhost:4567/todos");
+
+        int statusCode = res.getStatusCode();
+        String actualTitle = res.getBody().jsonPath().getString("title");
+        String doneStatus = res.getBody().jsonPath().getString("doneStatus");
+        assertEquals(201, statusCode);
+        assertEquals("title2", actualTitle);
+        assertEquals("true", doneStatus);
+
+    }
+
+    @Test
+    public void postTodosNoStatus(){
+        JSONObject body = new JSONObject();
+        body.put("title", "title2");
+        body.put("description", "description2");
+
+        Response res = RestAssured.given()
+                .body(body.toString())
+                .post("http://localhost:4567/todos");
+
+        int statusCode = res.getStatusCode();
+        String actualTitle = res.getBody().jsonPath().getString("title");
+        String actualDescription = res.getBody().jsonPath().getString("description");
+        assertEquals(201, statusCode);
+        assertEquals("title2", actualTitle);
+        assertEquals("description2", actualDescription);
+
+    }
+
+    @Test
     public void postTodosNoPresentField(){
         JSONObject body = new JSONObject();
         body.put("notExistantField", "noField");
@@ -121,7 +159,7 @@ public class testsTodo {
     }
 
     @Test
-    public void getTodosWithInValidID() {
+    public void getTodosWithInvalidID() {
         Response response = RestAssured.given()
                                        .get(url + "/todos/10000");
 
@@ -144,11 +182,6 @@ public class testsTodo {
         assertEquals(404,response.getStatusCode());
     }
 
-    @Test
-    public void putTodosWith(){
-        Response response = RestAssured.given().head(url + "/todos/1000");
-        assertEquals(404,response.getStatusCode());
-    }
 
 
     @Test
@@ -376,152 +409,5 @@ public class testsTodo {
         assertEquals(200, response.getStatusCode());
         assertEquals("application/xml", response.getContentType());
     }
-
-
-
-
-//    @Test
-//    public void getTodosWithIncorrectID()
-//    {
-//        RestAssured.given()
-//                .get(url + "/todos/10")
-//                .then()
-//                .assertThat()
-//                .statusCode(equalTo(404));
-//
-//    }
-//
-//    @Test
-//    public void HeadTodosWithCorrectID() {
-//        RestAssured.given()
-//                .get(url + "/todos/1")
-//                .then()
-//                .assertThat()
-//                .statusCode(equalTo(200));
-//    }
-//
-//    @Test
-//    public void HeadTodosWithIncorrectID() {
-//        RestAssured.given()
-//                .head(url + "/todos/10")
-//                .then()
-//                .assertThat()
-//                .statusCode(equalTo(404));
-//    }
-//
-//    @Test
-//    public void PostWithCorrectValues(){
-//
-//        JSONObject body = new JSONObject();
-//        body.put("title", "title2");
-//        body.put("description", "description2");
-//        body.put("doneStatus", false);
-//
-//        RestAssured.given()
-//                .body(body.toString())
-//                .when()
-//                .post(url + "/todos/3")
-//                .then()
-//                .assertThat()
-//                .body("title",equalTo("title2"))
-//                .and()
-//                .body("description", equalTo("description2"))
-//                .and()
-//                .body("doneStatus", equalTo("false"))
-//                .and()
-//                .statusCode(equalTo(200));
-//    }
-//
-//    @Test
-//    public void PostWithIncorrect(){
-//
-//        JSONObject body = new JSONObject();
-//        body.put("title", "title2");
-//        body.put("description", "description2");
-//        body.put("doneStatus", false);
-//
-//        RestAssured.given()
-//                .body(body.toString())
-//                .when()
-//                .post(url + "/todos/1000")
-//                .then()
-//                .assertThat()
-//                .statusCode(equalTo(404));
-//    }
-//
-//    @Test
-//    public void PostWithNonBooleanField(){
-//
-//        JSONObject body = new JSONObject();
-//        body.put("title", "title2");
-//        body.put("description", "description2");
-//        body.put("doneStatus", "false");
-//
-//        RestAssured.given()
-//                .body(body.toString())
-//                .when()
-//                .post(url + "/todos/4")
-//                .then()
-//                .assertThat()
-//                .statusCode(equalTo(400));
-//    }
-//
-//    @Test
-//    public void PutWithIncorrect(){
-//
-//        JSONObject body = new JSONObject();
-//        body.put("title", "title3");
-//        body.put("description", "description3");
-//        body.put("doneStatus", false);
-//
-//        RestAssured.given()
-//                .body(body.toString())
-//                .when()
-//                .put(url + "/todos/3")
-//                .then()
-//                .assertThat()
-//                .body("title",equalTo("title3"))
-//                .and()
-//                .body("description", equalTo("description3"))
-//                .and()
-//                .body("doneStatus", equalTo("false"))
-//                .and()
-//                .statusCode(equalTo(200));
-//    }
-//
-//    @Test
-//    public void PutWithWrongId(){
-//
-//        JSONObject body = new JSONObject();
-//        body.put("title", "title4");
-//        body.put("description", "description4");
-//        body.put("doneStatus", "false");
-//
-//        RestAssured.given()
-//                .body(body.toString())
-//                .when()
-//                .put(url + "/todos/10000")
-//                .then()
-//                .assertThat()
-//                .statusCode(equalTo(404));
-//    }
-//
-//    @Test
-//    public void DeleteWithGoodID(){
-//        RestAssured.given()
-//                .delete(url + "/todos/3")
-//                .then()
-//                .assertThat()
-//                .statusCode(equalTo(200));
-//    }
-//
-//    @Test
-//    public void DeleteNoMoreExisting(){
-//        RestAssured.given()
-//                .delete(url + "/todos/3")
-//                .then()
-//                .assertThat()
-//                .statusCode(equalTo(404));
-//    }
 
 }
