@@ -1,14 +1,9 @@
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.skyscreamer.jsonassert.JSONAssert;
 
-import javax.xml.crypto.dsig.XMLObject;
-
-import static org.hamcrest.core.IsEqual.equalTo;
 
 import java.io.IOException;
 
@@ -23,7 +18,7 @@ public class testsTodo {
     public static void setUp() throws Exception {
         try {
             process = Runtime.getRuntime().exec("java -jar runTodoManagerRestAPI-1.5.5.jar");
-            Thread.sleep(100);
+//            Thread.sleep(100);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -33,7 +28,7 @@ public class testsTodo {
     @AfterAll
     public static void setDown() throws InterruptedException {
         process.destroy();
-        Thread.sleep(100);
+//        Thread.sleep(100);
     }
 
     @Test
@@ -61,8 +56,8 @@ public class testsTodo {
         body.put("doneStatus", false);
 
         Response response = RestAssured.given()
-                                  .body(body.toString())
-                                  .post("http://localhost:4567/todos");
+                                       .body(body.toString())
+                                       .post("http://localhost:4567/todos");
 
 
         int statusCode = response.getStatusCode();
@@ -81,11 +76,11 @@ public class testsTodo {
         body.put("description", "description1");
         body.put("doneStatus", false);
 
-        Response res = RestAssured.given()
+        Response response = RestAssured.given()
                                   .body(body.toString())
                                   .post("http://localhost:4567/todos");
 
-        int statusCode = res.getStatusCode();
+        int statusCode = response.getStatusCode();
         assertEquals(400, statusCode);
 
     }
@@ -96,13 +91,13 @@ public class testsTodo {
         body.put("title", "title2");
         body.put("doneStatus", true);
 
-        Response res = RestAssured.given()
-                .body(body.toString())
-                .post("http://localhost:4567/todos");
+        Response response = RestAssured.given()
+                                  .body(body.toString())
+                                  .post("http://localhost:4567/todos");
 
-        int statusCode = res.getStatusCode();
-        String actualTitle = res.getBody().jsonPath().getString("title");
-        String doneStatus = res.getBody().jsonPath().getString("doneStatus");
+        int statusCode = response.getStatusCode();
+        String actualTitle = response.getBody().jsonPath().getString("title");
+        String doneStatus = response.getBody().jsonPath().getString("doneStatus");
         assertEquals(201, statusCode);
         assertEquals("title2", actualTitle);
         assertEquals("true", doneStatus);
@@ -115,13 +110,13 @@ public class testsTodo {
         body.put("title", "title2");
         body.put("description", "description2");
 
-        Response res = RestAssured.given()
-                .body(body.toString())
-                .post("http://localhost:4567/todos");
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post("http://localhost:4567/todos");
 
-        int statusCode = res.getStatusCode();
-        String actualTitle = res.getBody().jsonPath().getString("title");
-        String actualDescription = res.getBody().jsonPath().getString("description");
+        int statusCode = response.getStatusCode();
+        String actualTitle = response.getBody().jsonPath().getString("title");
+        String actualDescription = response.getBody().jsonPath().getString("description");
         assertEquals(201, statusCode);
         assertEquals("title2", actualTitle);
         assertEquals("description2", actualDescription);
@@ -133,11 +128,11 @@ public class testsTodo {
         JSONObject body = new JSONObject();
         body.put("notExistantField", "noField");
 
-        Response res = RestAssured.given()
+        Response response = RestAssured.given()
                                   .body(body.toString())
                                   .post("http://localhost:4567/todos");
 
-        int statusCode = res.getStatusCode();
+        int statusCode = response.getStatusCode();
         assertEquals(400, statusCode);
 
     }
@@ -201,15 +196,15 @@ public class testsTodo {
         body.put("description", "description2");
         body.put("doneStatus", false);
 
-        Response res = RestAssured.given()
-                .body(body.toString())
-                .post(url + "/todos/" + id);
+        Response response = RestAssured.given()
+                                  .body(body.toString())
+                                  .post(url + "/todos/" + id);
 
 
-        int statusCode = res.getStatusCode();
-        String actualTitle = res.getBody().jsonPath().getString("title");
-        String description = res.getBody().jsonPath().getString("description");
-        String doneStatus = res.getBody().jsonPath().getString("doneStatus");
+        int statusCode = response.getStatusCode();
+        String actualTitle = response.getBody().jsonPath().getString("title");
+        String description = response.getBody().jsonPath().getString("description");
+        String doneStatus = response.getBody().jsonPath().getString("doneStatus");
         assertEquals(200, statusCode);
         assertEquals("title2", actualTitle);
         assertEquals("description2", description);
@@ -223,13 +218,13 @@ public class testsTodo {
         JSONObject body = new JSONObject();
         body.put("title", "title2");
 
-        Response res = RestAssured.given()
-                .body(body.toString())
-                .post(url  + "/todos/" + id);
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post(url  + "/todos/" + id);
 
 
-        int statusCode = res.getStatusCode();
-        String actualTitle = res.getBody().jsonPath().getString("title");
+        int statusCode = response.getStatusCode();
+        String actualTitle = response.getBody().jsonPath().getString("title");
         assertEquals(200, statusCode);
         assertEquals("title2", actualTitle);
 
@@ -242,13 +237,13 @@ public class testsTodo {
         body.put("description", "description2");
 
 
-        Response res = RestAssured.given()
-                .body(body.toString())
-                .post(url + "/todos/"+ id);
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post(url + "/todos/"+ id);
 
 
-        int statusCode = res.getStatusCode();
-        String actualDescription = res.getBody().jsonPath().getString("description");
+        int statusCode = response.getStatusCode();
+        String actualDescription = response.getBody().jsonPath().getString("description");
         assertEquals(200, statusCode);
         assertEquals("description2", actualDescription);
 
@@ -261,13 +256,13 @@ public class testsTodo {
         body.put("doneStatus", true);
 
 
-        Response res = RestAssured.given()
-                .body(body.toString())
-                .post(url + "/todos/"+ id);
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post(url + "/todos/"+ id);
 
 
-        int statusCode = res.getStatusCode();
-        String actualDescription = res.getBody().jsonPath().getString("doneStatus");
+        int statusCode = response.getStatusCode();
+        String actualDescription = response.getBody().jsonPath().getString("doneStatus");
         assertEquals(200, statusCode);
         assertEquals("true", actualDescription);
 
@@ -282,15 +277,15 @@ public class testsTodo {
         body.put("doneStatus", false);
 
 
-        Response res = RestAssured.given()
-                .body(body.toString())
-                .put(url + "/todos/" + id);
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .put(url + "/todos/" + id);
 
 
-        int statusCode = res.getStatusCode();
-        String actualTitle = res.getBody().jsonPath().getString("title");
-        String description = res.getBody().jsonPath().getString("description");
-        String doneStatus = res.getBody().jsonPath().getString("doneStatus");
+        int statusCode = response.getStatusCode();
+        String actualTitle = response.getBody().jsonPath().getString("title");
+        String description = response.getBody().jsonPath().getString("description");
+        String doneStatus = response.getBody().jsonPath().getString("doneStatus");
         assertEquals(200, statusCode);
         assertEquals("title2", actualTitle);
         assertEquals("description2", description);
@@ -307,12 +302,12 @@ public class testsTodo {
         body.put("doneStatus", false);
 
 
-        Response res = RestAssured.given()
-                .body(body.toString())
-                .put(url +"/todos/" + id);
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .put(url +"/todos/" + id);
 
 
-        int statusCode = res.getStatusCode();
+        int statusCode = response.getStatusCode();
         assertEquals(404, statusCode);
 
     }
@@ -326,12 +321,12 @@ public class testsTodo {
         body.put("doneStatus", false);
 
 
-        Response res = RestAssured.given()
-                .body(body.toString())
-                .put(url+ "/todos/" + id);
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .put(url+ "/todos/" + id);
 
 
-        int statusCode = res.getStatusCode();
+        int statusCode = response.getStatusCode();
         assertEquals(400, statusCode);
 
     }
@@ -344,12 +339,12 @@ public class testsTodo {
         body.put("doneStatus", false);
 
 
-        Response res = RestAssured.given()
-                .body(body.toString())
-                .put(url+ "/todos/" + id);
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .put(url+ "/todos/" + id);
 
 
-        int statusCode = res.getStatusCode();
+        int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
 
     }
@@ -361,13 +356,13 @@ public class testsTodo {
         body.put("title", "title2");
 
 
-        Response res = RestAssured.given()
-                                  .body(body.toString())
-                                  .put(url + "/todos/" + id);
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .put(url + "/todos/" + id);
 
 
-        int statusCode = res.getStatusCode();
-        String actualTitle = res.getBody().jsonPath().getString("title");
+        int statusCode = response.getStatusCode();
+        String actualTitle = response.getBody().jsonPath().getString("title");
         assertEquals(200, statusCode);
         assertEquals("title2", actualTitle);
 
@@ -383,12 +378,12 @@ public class testsTodo {
         body.put("description", "description3");
         body.put("doneStatus", false);
 
-        Response res = RestAssured.given()
-                                  .body(body.toString())
-                                  .post(url + "/todos/" + id);
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post(url + "/todos/" + id);
 
 
-        int statusCode = res.getStatusCode();
+        int statusCode = response.getStatusCode();
         assertEquals(404, statusCode);
 
 
@@ -397,148 +392,243 @@ public class testsTodo {
     @Test
     public void deleteTodosWithGoodID(){
         int id = 2;
-        Response res = RestAssured.given()
-                                  .delete(url + "/todos/" +id);
+        Response response = RestAssured.given()
+                                       .delete(url + "/todos/" +id);
 
-        int statusCode = res.getStatusCode();
+        int statusCode = response.getStatusCode();
         assertEquals(200,statusCode);
     }
 
     @Test
     public void DeleteNoMoreExistingTodo(){
         int id = 10000;
-        Response res = RestAssured.given()
-                                  .delete(url + "/todos/" + id);
+        Response response = RestAssured.given()
+                                       .delete(url + "/todos/" + id);
 
-        int statusCode = res.getStatusCode();
+        int statusCode = response.getStatusCode();
         assertEquals(404,statusCode);
 
     }
 
 
 //    ///////////////////////////////////// /todos/id/categories /////////////////////////
-//    @Test
-//    public void getCategoriesTodosWithValidID() {
-//        String id = "1";
-//        Response response = RestAssured.get(url + "/todos/" + id + "/categories");
-//
-//        assertEquals(200, response.getStatusCode());
-//
+    @Test
+    public void getCategoriesTodosWithValidID() {
+        String id = "1";
+        Response response = RestAssured.get(url + "/todos/" + id + "/categories");
+
+        assertEquals(200, response.getStatusCode());
+
+        String actualId = response.getBody().jsonPath().getString("categories[0].id");
+        String actualTitle = response.getBody().jsonPath().getString("categories[0].title");
+        String actualDescription = response.getBody().jsonPath().getString("categories[0].description");
+
+        assertEquals(id, actualId);
+        assertEquals("Office", actualTitle);
+        assertEquals("", actualDescription);
+    }
+
+    // Bug
+    @Test
+    public void getCategoriesTodosWithInalidID() {
+        String id = "100";
+        Response response = RestAssured.get(url + "/todos/" + id + "/categories");
+
+        assertEquals(200, response.getStatusCode());
+
+    }
+    @Test
+    public void headCategoriesTodosWithValidID(){
+        int id = 1;
+        Response response = RestAssured.given()
+                                       .head(url + "/todos/" + id + "/categories");
+
+        assertEquals(200,response.getStatusCode());
+    }
+
+    @Test
+    public void headCategoriesTodosWithInvalidID(){
+        int id = 100;
+        Response response = RestAssured.given()
+                                       .head(url + "/todos/" + id + "/categories");
+
+        assertEquals(200,response.getStatusCode());
+    }
+
+
+    @Test
+    public void postCategoriesWithValidJSONInputsValidID() {
+        int id = 1;
+        JSONObject body = new JSONObject();
+        body.put("title", "title2");
+
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post(url + "/todos/" + id + "/categories");
+
+
+        int statusCode = response.getStatusCode();
+        assertEquals(201, statusCode);
+
 //        String actualId = response.getBody().jsonPath().getString("categories[0].id");
 //        String actualTitle = response.getBody().jsonPath().getString("categories[0].title");
 //        String actualDescription = response.getBody().jsonPath().getString("categories[0].description");
 //
 //        assertEquals(id, actualId);
-//        assertEquals("Office", actualTitle);
-//        assertEquals("", actualDescription);
-//    }
-////
-//    @Test
-//    public void headCategoriesTodosWithValidID(){
-//        int id = 1;
-//        Response response = RestAssured.given()
-//                .head(url + "/todos/" + id + "/categories");
-//
-//        assertEquals(200,response.getStatusCode());
-//    }
-//
-//
-//    @Test
-//    public void postCategoriesWithValidJSONInputsValidID() {
-//        int id = 1;
-//        JSONObject body = new JSONObject();
-//        body.put("title", "title2");
-//
-//        Response response = RestAssured.given()
-//                                       .body(body.toString())
-//                                       .post(url + "/todos/" + id + "/categories");
-//
-//
-//        int statusCode = response.getStatusCode();
-//        assertEquals(201, statusCode);
-//
-////        String actualId = response.getBody().jsonPath().getString("categories[0].id");
-////        String actualTitle = response.getBody().jsonPath().getString("categories[0].title");
-////        String actualDescription = response.getBody().jsonPath().getString("categories[0].description");
-////
-////        assertEquals(id, actualId);
-//////        assertEquals("title2", actualTitle);
-//////        assertEquals("", actualDescription);
-//
-//
-//    }
-//
-//    @Test
-//    public void deleteCategoriesWithGoodID(){
-//        int idTask = 1;
-//        int idCategories = 2;
-//        Response res = RestAssured.given()
-//                .delete(url + "/todos/" +idTask + "/categories/" + idCategories);
-//
-//        int statusCode = res.getStatusCode();
-//        assertEquals(404,statusCode);
-//    }
+////        assertEquals("title2", actualTitle);
+////        assertEquals("", actualDescription);
 
-    ///////////////////////////////////// /todos/id/tasksof /////////////////////////
-//    @Test
-//    public void getTasksOfTodosWithValidID() {
-//        String id = "1";
-//        Response response = RestAssured.given()
-//                                       .get(url + "/todos/" + id +"/tasksof");
-//
-//        assertEquals(200, response.getStatusCode());
-//
-//        String actualID = response.getBody().jsonPath().getString("projects[0].id");
-//        String actualTitle = response.getBody().jsonPath().getString("projects[0].title");
-//        String actualDescription = response.getBody().jsonPath().getString("projects[0].description");
-//        String actualActive = response.getBody().jsonPath().getString("projects[0].active");
-//        assertEquals(id, actualID);
-//        assertEquals("Office Work", actualTitle);
-//        assertEquals("", actualDescription);
-//        assertEquals("false", actualActive);
-//
-//    }
-//
-//    @Test
-//    public void headTasksTodosWithValidID(){
-//        int id = 1;
-//        Response response = RestAssured.given()
-//                .head(url + "/todos/"+ 1 + "/categories");
-//
-//        assertEquals(200,response.getStatusCode());
-//    }
-//
-//
-//
-//    @Test
-//    public void postTasksOfWithValidJSONInputsValidID() {
-//        int id = 1;
-//        JSONObject body = new JSONObject();
-//        body.put("title", "title2");
-//
-//        Response response = RestAssured.given()
-//                .body(body.toString())
-//                .post(url + "/todos/" + id + "/tasksof");
-//
-//
-//        int statusCode = response.getStatusCode();
-//        assertEquals(201, statusCode);
-//
-//
-//
-//
-//    }
-//
-//    @Test
-//    public void deleteTasksofWithGoodID(){
-//        int idTask = 1;
-//        int idTasks = 2;
-//        Response res = RestAssured.given()
-//                                  .delete(url + "/todos/" +idTask + "/tasksof/" + idTasks);
-//
-//        int statusCode = res.getStatusCode();
-//        assertEquals(404,statusCode);
-//    }
+
+    }
+
+    @Test
+    public void postCategoriesWithValidJSONInputsInvalidID() {
+        int id = 10;
+        JSONObject body = new JSONObject();
+        body.put("title", "title2");
+
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post(url + "/todos/" + id + "/categories");
+
+
+        int statusCode = response.getStatusCode();
+        assertEquals(404, statusCode);
+    }
+
+    @Test
+    public void deleteCategoriesWithGoodID(){
+        int idTask = 1;
+        int idCategories = 2;
+        Response response = RestAssured.given()
+                                  .delete(url + "/todos/" +idTask + "/categories/" + idCategories);
+
+        int statusCode = response.getStatusCode();
+        assertEquals(404,statusCode);
+    }
+
+    @Test
+    public void deleteCategoriesWithInvalidID(){
+        int idTask = 1;
+        int idCategories = 20;
+        Response response = RestAssured.given()
+                                       .delete(url + "/todos/" +idTask + "/categories/" + idCategories);
+
+        int statusCode = response.getStatusCode();
+        assertEquals(404,statusCode);
+    }
+
+    /////////////////////////////////// /todos/id/tasksof /////////////////////////
+    @Test
+    public void getTasksOfTodosWithValidID() {
+        String id = "1";
+        Response response = RestAssured.given()
+                                       .get(url + "/todos/" + id +"/tasksof");
+
+        assertEquals(200, response.getStatusCode());
+
+        String actualID = response.getBody().jsonPath().getString("projects[0].id");
+        String actualTitle = response.getBody().jsonPath().getString("projects[0].title");
+        String actualDescription = response.getBody().jsonPath().getString("projects[0].description");
+        String actualActive = response.getBody().jsonPath().getString("projects[0].active");
+        assertEquals(id, actualID);
+        assertEquals("Office Work", actualTitle);
+        assertEquals("", actualDescription);
+        assertEquals("false", actualActive);
+
+    }
+
+    @Test
+    public void getTasksOfTodosWithVInvalidID() {
+        String id = "1";
+        Response response = RestAssured.given()
+                                       .get(url + "/todos/" + id +"/tasksof");
+
+        assertEquals(200, response.getStatusCode());
+
+        String actualID = response.getBody().jsonPath().getString("projects[0].id");
+        String actualTitle = response.getBody().jsonPath().getString("projects[0].title");
+        String actualDescription = response.getBody().jsonPath().getString("projects[0].description");
+        String actualActive = response.getBody().jsonPath().getString("projects[0].active");
+        assertEquals(id, actualID);
+        assertEquals("Office Work", actualTitle);
+        assertEquals("", actualDescription);
+        assertEquals("false", actualActive);
+
+    }
+
+    @Test
+    public void headTasksTodosWithValidID(){
+        int id = 1;
+        Response response = RestAssured.given()
+                                       .head(url + "/todos/"+ id + "/categories");
+
+        assertEquals(200,response.getStatusCode());
+    }
+
+    @Test
+    public void headTasksTodosWithInvalidID(){
+        int id = 1000;
+        Response response = RestAssured.given()
+                                       .head(url + "/todos/"+ id + "/categories");
+
+        assertEquals(200,response.getStatusCode());
+    }
+
+
+
+    @Test
+    public void postTasksOfWithValidJSONInputsValidID() {
+        int id = 1;
+        JSONObject body = new JSONObject();
+        body.put("title", "title2");
+
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post(url + "/todos/" + id + "/tasksof");
+
+
+        int statusCode = response.getStatusCode();
+        assertEquals(201, statusCode);
+    }
+
+    @Test
+    public void postTasksOfWithValidJSONInputsInalidID() {
+        int id = 100;
+        JSONObject body = new JSONObject();
+        body.put("title", "title2");
+
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post(url + "/todos/" + id + "/tasksof");
+
+
+        int statusCode = response.getStatusCode();
+        assertEquals(404, statusCode);
+
+    }
+
+    @Test
+    public void deleteTasksofWithGoodID(){
+        int idTask = 1;
+        int idTasks = 2;
+        Response response = RestAssured.given()
+                                  .delete(url + "/todos/" +idTask + "/tasksof/" + idTasks);
+
+        int statusCode = response.getStatusCode();
+        assertEquals(404,statusCode);
+    }
+
+    @Test
+    public void deleteTasksofWithInvalidID(){
+        int idTask = 1;
+        int idTasks = 10;
+        Response response = RestAssured.given()
+                                       .delete(url + "/todos/" +idTask + "/tasksof/" + idTasks);
+
+        int statusCode = response.getStatusCode();
+        assertEquals(404,statusCode);
+    }
 
     @Test
     public void malformatedJSON(){
@@ -547,12 +637,12 @@ public class testsTodo {
         body.put("description1", "description2");
         body.put("doneStatus1", false);
 
-        Response res = RestAssured.given()
-                                  .body(body.toString())
-                                  .post("http://localhost:4567/todos/1");
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post("http://localhost:4567/todos/1");
 
 
-        int statusCode = res.getStatusCode();
+        int statusCode = response.getStatusCode();
         assertEquals(400,statusCode);
     }
 
@@ -585,8 +675,4 @@ public class testsTodo {
         assertEquals(200, response.getStatusCode());
         assertEquals("application/xml", response.getContentType());
     }
-
-
-
-
 }
