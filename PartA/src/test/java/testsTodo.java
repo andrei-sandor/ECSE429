@@ -11,30 +11,30 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.Random.class)
 public class testsTodo {
-    public static Process process;
+    public static Process jar;
     public String url = "http://localhost:4567";
 
-    @BeforeAll
-    public static void setUp() throws Exception {
+    @BeforeEach
+    public void setUp() throws Exception {
         try {
-            process = Runtime.getRuntime().exec("java -jar runTodoManagerRestAPI-1.5.5.jar");
+            jar = Runtime.getRuntime().exec("java -jar runTodoManagerRestAPI-1.5.5.jar");
             Thread.sleep(1000);
         } catch (IOException e) {
             e.printStackTrace();
         }
         // Make sure application is running
-        System.out.println("Starting tests in...\n");
-        for (int i = 3; i > 0; i--) {
-            System.out.println(i);
-            Thread.sleep(100);
-        }
+//        System.out.println("Starting tests in...\n");
+//        for (int i = 3; i > 0; i--) {
+//            System.out.println(i);
+//            Thread.sleep(100);
+//        }
 
     }
 
-    @AfterAll
-    public static void setDown() throws InterruptedException {
-        process.destroy();
-        Thread.sleep(2000);
+    @AfterEach
+    public void setDown() throws InterruptedException {
+        jar.destroy();
+        Thread.sleep(1000);
     }
 
     @Test
