@@ -18,7 +18,7 @@ public class testsTodo {
     public void setUp() throws Exception {
         try {
             jar = Runtime.getRuntime().exec("java -jar runTodoManagerRestAPI-1.5.5.jar");
-            Thread.sleep(1000);
+            Thread.sleep(300);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -34,7 +34,7 @@ public class testsTodo {
     @AfterEach
     public void setDown() throws InterruptedException {
         jar.destroy();
-        Thread.sleep(1000);
+        Thread.sleep(300);
     }
 
     @Test
