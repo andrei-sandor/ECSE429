@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 
+import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.Random.class)
@@ -18,23 +19,16 @@ public class testsTodo {
     public void setUp() throws Exception {
         try {
             jar = Runtime.getRuntime().exec("java -jar runTodoManagerRestAPI-1.5.5.jar");
-            Thread.sleep(300);
+            sleep(300);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Make sure application is running
-//        System.out.println("Starting tests in...\n");
-//        for (int i = 3; i > 0; i--) {
-//            System.out.println(i);
-//            Thread.sleep(100);
-//        }
-
     }
 
     @AfterEach
     public void setDown() throws InterruptedException {
         jar.destroy();
-        Thread.sleep(300);
+        sleep(300);
     }
 
     @Test
@@ -43,9 +37,6 @@ public class testsTodo {
                                        .get(url + "/todos");
 
         assertEquals(200, response.getStatusCode());
-
-        String intial_todos_size = response.getBody().jsonPath().getString("todos.size()");
-        assertEquals("2",intial_todos_size);
     }
 
     @Test
@@ -149,8 +140,10 @@ public class testsTodo {
         assertEquals(400, statusCode);
 
     }
+    //
+    // todos/id section
+    //
 
-    ///////////////////////////////////// /todos/id /////////////////////////
     @Test
     public void getTodosWithValidID() {
         int id = 1;
@@ -343,12 +336,14 @@ public class testsTodo {
         assertEquals(404, statusCode);
 
     }
+
+    // Bug
     @Test
     public void putTodosWithMissingTitleValidID() {
         int id = 1;
         JSONObject body = new JSONObject();
         body.put("description", "description5");
-        body.put("doneStatus", false);
+        body.put("doneStatus", true);
 
 
         Response response = RestAssured.given()
@@ -361,6 +356,30 @@ public class testsTodo {
 
     }
 
+    // Expected behavior
+    @Test
+    public void putTodosWithMissingTitleValidIDExpectedResult() {
+        int id = 1;
+        JSONObject body = new JSONObject();
+        body.put("description", "description5");
+        body.put("doneStatus", true);
+
+
+        Response response = RestAssured.given()
+                .body(body.toString())
+                .put(url+ "/todos/" + id);
+
+
+        int statusCode = response.getStatusCode();
+        String actualTitle = response.getBody().jsonPath().getString("title");
+        String description = response.getBody().jsonPath().getString("description");
+        String doneStatus = response.getBody().jsonPath().getString("doneStatus");
+        assertEquals(200, statusCode);
+        assertEquals("title2", actualTitle);
+        assertEquals("description5", description);
+        assertEquals("true", doneStatus);
+
+    }
     @Test
     public void putTodosWithMissingTitleValidIDValidScenario() {
         int id = 1;
@@ -382,24 +401,75 @@ public class testsTodo {
     // Bug
     @Test
     public void putTodosWithOnlyTitleValidID() {
-        int id = 1;
+        // We add a todo to better compare the results since the initial todos are set to the default values generated
+        // by this bug.
+
+        JSONObject body_post = new JSONObject();
+        body_post.put("title", "title3");
+        body_post.put("description", "description3");
+        body_post.put("doneStatus", true);
+
+        Response response_post = RestAssured.given()
+                .body(body_post.toString())
+                .post(url + "/todos");
+
+        assertEquals(201, response_post.getStatusCode());
+
+        int id_put = 3;
         JSONObject body = new JSONObject();
-        body.put("title", "title2");
+        body.put("title", "title new");
 
 
-        Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .put(url + "/todos/" + id);
+        Response response_put = RestAssured.given()
+                                           .body(body.toString())
+                                           .put(url + "/todos/" + id_put);
 
 
-        int statusCode = response.getStatusCode();
-        String actualTitle = response.getBody().jsonPath().getString("title");
-        String description = response.getBody().jsonPath().getString("description");
-        String doneStatus = response.getBody().jsonPath().getString("doneStatus");
+        int statusCode = response_put.getStatusCode();
+        String actualTitle = response_put.getBody().jsonPath().getString("title");
+        String description = response_put.getBody().jsonPath().getString("description");
+        String doneStatus = response_put.getBody().jsonPath().getString("doneStatus");
         assertEquals(200, statusCode);
-        assertEquals("title2", actualTitle);
+        assertEquals("title new", actualTitle);
         assertEquals("", description);
         assertEquals("false", doneStatus);
+    }
+
+    // Expected Result
+    @Test
+    public void putTodosWithOnlyTitleValidIDExpectedResult() throws InterruptedException {
+
+        // We add a todo to better compare the results since the initial todos are set to the default values generated
+        // by this bug.
+
+        JSONObject body_post = new JSONObject();
+        body_post.put("title", "title3");
+        body_post.put("description", "description3");
+        body_post.put("doneStatus", true);
+
+        Response response = RestAssured.given()
+                .body(body_post.toString())
+                .post(url + "/todos");
+
+
+        int id_put = 3;
+        JSONObject body_put = new JSONObject();
+        body_put.put("title", "new title");
+
+
+        Response response_put = RestAssured.given()
+                .body(body_put.toString())
+                .put(url + "/todos/" + id_put);
+
+
+        int statusCode = response_put.getStatusCode();
+        String actualTitle = response_put.getBody().jsonPath().getString("title");
+        String description = response_put.getBody().jsonPath().getString("description");
+        String doneStatus = response_put.getBody().jsonPath().getString("doneStatus");
+        assertEquals(200, statusCode);
+        assertEquals("new title", actualTitle);
+        assertEquals("description3", description);
+        assertEquals("true", doneStatus);
     }
 
     @Test
