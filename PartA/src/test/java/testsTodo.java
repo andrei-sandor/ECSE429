@@ -15,6 +15,7 @@ public class testsTodo {
     public static Process jar;
     public String url = "http://localhost:4567";
 
+
     @BeforeEach
     public void setUp() throws Exception {
         try {
@@ -31,6 +32,11 @@ public class testsTodo {
         sleep(300);
     }
 
+    //
+    // Start of unit test related to /todos
+    //
+
+    // GET call
     @Test
     public void getTodos() {
         Response response = RestAssured.given()
@@ -39,6 +45,7 @@ public class testsTodo {
         assertEquals(200, response.getStatusCode());
     }
 
+    // HEAD call
     @Test
     public void headTodos(){
         Response response = RestAssured.given()
@@ -47,6 +54,7 @@ public class testsTodo {
         assertEquals(200,response.getStatusCode());
     }
 
+    //POST call with all JSON inputs there
     @Test
     public void postTodosWithValidJSONInputs(){
         JSONObject body = new JSONObject();
@@ -69,6 +77,7 @@ public class testsTodo {
         assertEquals("false", doneStatus);
     }
 
+    // POST call without title
     @Test
     public void postTodosNoTitle(){
         JSONObject body = new JSONObject();
@@ -84,6 +93,7 @@ public class testsTodo {
 
     }
 
+    //POST call without description
     @Test
     public void postTodosNoDescription(){
         JSONObject body = new JSONObject();
@@ -105,6 +115,7 @@ public class testsTodo {
 
     }
 
+    //POST call without doneStatus
     @Test
     public void postTodosNoStatus(){
         JSONObject body = new JSONObject();
@@ -144,6 +155,7 @@ public class testsTodo {
     // todos/id section
     //
 
+
     @Test
     public void getTodosWithValidID() {
         int id = 1;
@@ -164,6 +176,7 @@ public class testsTodo {
 
     }
 
+
     @Test
     public void getTodosWithInvalidID() {
         int id = 10000;
@@ -173,6 +186,7 @@ public class testsTodo {
         assertEquals(404, response.getStatusCode());
     }
 
+
     @Test
     public void headTodosWithValidID(){
         int id = 1;
@@ -181,7 +195,7 @@ public class testsTodo {
 
         assertEquals(200,response.getStatusCode());
     }
-
+    
     @Test
     public void headTodosWithInValidID(){
         int id = 1000;
@@ -192,7 +206,7 @@ public class testsTodo {
     }
 
 
-
+    // POST with valid id and all the correct input values.
     @Test
     public void postTodosWithValidJSONInputsValidID() {
         int id = 1;
@@ -218,6 +232,7 @@ public class testsTodo {
 
     }
 
+    //POST with invalid id
     @Test
     public void postTodosWithValidJSONInputsInvalidID() {
         int id = 1000;
@@ -237,6 +252,7 @@ public class testsTodo {
 
     }
 
+    // POST with only title
     @Test
     public void postTodosWithOnlyTitleValidID() {
         int id = 1;
@@ -255,6 +271,7 @@ public class testsTodo {
 
     }
 
+    // POST with only description
     @Test
     public void postTodosWithOnlyDescriptionValidID() {
         int id = 1;
@@ -274,6 +291,7 @@ public class testsTodo {
 
     }
 
+    // POST with only done status
     @Test
     public void postTodosWithOnlyDoneStatusValidID() {
         int id = 1;
@@ -293,6 +311,7 @@ public class testsTodo {
 
     }
 
+    // PUT with valid id and all the fields
     @Test
     public void putTodosWithCorrectJSONValidID() {
         int id = 1;
@@ -317,7 +336,7 @@ public class testsTodo {
         assertEquals("false", doneStatus);
 
     }
-
+    // PUT with invalid id
     @Test
     public void putTodosWithCorrectJSONInvalidID() {
         int id = 10000;
@@ -337,7 +356,7 @@ public class testsTodo {
 
     }
 
-    // Bug
+    // Bug, PUT without a title
     @Test
     public void putTodosWithMissingTitleValidID() {
         int id = 1;
@@ -380,6 +399,8 @@ public class testsTodo {
         assertEquals("true", doneStatus);
 
     }
+
+    // PUT with missing title.
     @Test
     public void putTodosWithMissingTitleValidIDValidScenario() {
         int id = 1;
@@ -398,7 +419,7 @@ public class testsTodo {
 
     }
 
-    // Bug
+    // Bug, here the description and the doneStatus get reset to "" and false after not touching them
     @Test
     public void putTodosWithOnlyTitleValidID() {
         // We add a todo to better compare the results since the initial todos are set to the default values generated
@@ -471,7 +492,7 @@ public class testsTodo {
         assertEquals("description3", description);
         assertEquals("true", doneStatus);
     }
-
+    // Delete with good id
     @Test
     public void deleteTodosWithGoodID(){
         int id = 2;
@@ -482,6 +503,7 @@ public class testsTodo {
         assertEquals(200,statusCode);
     }
 
+    // Delete with wrong id
     @Test
     public void DeleteNoMoreExistingTodo(){
         int id = 10000;
@@ -493,7 +515,7 @@ public class testsTodo {
 
     }
 
-
+    // Test with malforamted JSON
     @Test
     public void malformatedJSON(){
         JSONObject body = new JSONObject();
@@ -510,6 +532,7 @@ public class testsTodo {
         assertEquals(400,statusCode);
     }
 
+    // Test with malformated XML
     @Test
 	public void malformatedXML() throws Exception {
 
