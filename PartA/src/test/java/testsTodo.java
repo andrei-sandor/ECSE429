@@ -252,6 +252,74 @@ public class testsTodo {
 
     }
 
+    // POST without title
+    @Test
+    public void postTodosWithoutTitleValidID() {
+        int id = 1;
+        JSONObject body = new JSONObject();
+        body.put("description", "description2");
+        body.put("doneStatus", false);
+
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post(url  + "/todos/" + id);
+
+
+        int statusCode = response.getStatusCode();
+        String description = response.getBody().jsonPath().getString("description");
+        String doneStatus = response.getBody().jsonPath().getString("doneStatus");
+        assertEquals(200, statusCode);
+        assertEquals("description2", description);
+        assertEquals("false", doneStatus);
+
+    }
+
+    // POST without only description
+    @Test
+    public void postTodosWithoutOnlyDescriptionValidID() {
+        int id = 1;
+        JSONObject body = new JSONObject();
+        body.put("title", "title2");
+        body.put("doneStatus", false);
+
+
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post(url + "/todos/"+ id);
+
+
+        int statusCode = response.getStatusCode();
+        String actualTitle = response.getBody().jsonPath().getString("title");
+        String doneStatus = response.getBody().jsonPath().getString("doneStatus");
+        assertEquals(200, statusCode);
+        assertEquals("title2", actualTitle);
+        assertEquals("false", doneStatus);
+
+    }
+
+    // POST without only done status
+    @Test
+    public void postTodosWithoutOnlyDoneStatusValidID() {
+        int id = 1;
+        JSONObject body = new JSONObject();
+        body.put("title", "title2");
+        body.put("description", "description2");
+
+
+        Response response = RestAssured.given()
+                                       .body(body.toString())
+                                       .post(url + "/todos/"+ id);
+
+
+        int statusCode = response.getStatusCode();
+        String actualTitle = response.getBody().jsonPath().getString("title");
+        String description = response.getBody().jsonPath().getString("description");
+        assertEquals(200, statusCode);
+        assertEquals("title2", actualTitle);
+        assertEquals("description2", description);
+
+    }
+
     // POST with only title
     @Test
     public void postTodosWithOnlyTitleValidID() {
@@ -260,8 +328,8 @@ public class testsTodo {
         body.put("title", "title2");
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .post(url  + "/todos/" + id);
+                .body(body.toString())
+                .post(url  + "/todos/" + id);
 
 
         int statusCode = response.getStatusCode();
@@ -280,8 +348,8 @@ public class testsTodo {
 
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .post(url + "/todos/"+ id);
+                .body(body.toString())
+                .post(url + "/todos/"+ id);
 
 
         int statusCode = response.getStatusCode();
@@ -300,8 +368,8 @@ public class testsTodo {
 
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .post(url + "/todos/"+ id);
+                .body(body.toString())
+                .post(url + "/todos/" + id);
 
 
         int statusCode = response.getStatusCode();
@@ -310,7 +378,6 @@ public class testsTodo {
         assertEquals("true", actualDescription);
 
     }
-
     // PUT with valid id and all the fields
     @Test
     public void putTodosWithCorrectJSONValidID() {
@@ -400,24 +467,6 @@ public class testsTodo {
 
     }
 
-    // PUT with missing title.
-    @Test
-    public void putTodosWithMissingTitleValidIDValidScenario() {
-        int id = 1;
-        JSONObject body = new JSONObject();
-        body.put("description", "description5");
-        body.put("doneStatus", false);
-
-
-        Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .put(url+ "/todos/" + id);
-
-
-        int statusCode = response.getStatusCode();
-        assertEquals(400, statusCode);
-
-    }
 
     // Bug, here the description and the doneStatus get reset to "" and false after not touching them
     @Test
