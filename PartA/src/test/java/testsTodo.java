@@ -40,16 +40,18 @@ public class testsTodo {
     @Test
     public void getTodos() {
         Response response = RestAssured.given()
-                                       .get(url + "/todos");
+                .get(url + "/todos");
 
         assertEquals(200, response.getStatusCode());
+        String initial_todos_size = response.getBody().jsonPath().getString("todos.size()");
+        assertEquals("2",initial_todos_size);
     }
 
     // HEAD call
     @Test
     public void headTodos(){
         Response response = RestAssured.given()
-                                        .head(url + "/todos");
+                .head(url + "/todos");
 
         assertEquals(200,response.getStatusCode());
     }
@@ -63,8 +65,8 @@ public class testsTodo {
         body.put("doneStatus", false);
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .post("http://localhost:4567/todos");
+                .body(body.toString())
+                .post("http://localhost:4567/todos");
 
 
         int statusCode = response.getStatusCode();
@@ -85,8 +87,8 @@ public class testsTodo {
         body.put("doneStatus", false);
 
         Response response = RestAssured.given()
-                                  .body(body.toString())
-                                  .post("http://localhost:4567/todos");
+                .body(body.toString())
+                .post("http://localhost:4567/todos");
 
         int statusCode = response.getStatusCode();
         assertEquals(400, statusCode);
@@ -101,8 +103,8 @@ public class testsTodo {
         body.put("doneStatus", true);
 
         Response response = RestAssured.given()
-                                  .body(body.toString())
-                                  .post("http://localhost:4567/todos");
+                .body(body.toString())
+                .post("http://localhost:4567/todos");
 
         int statusCode = response.getStatusCode();
         String actualTitle = response.getBody().jsonPath().getString("title");
@@ -123,8 +125,8 @@ public class testsTodo {
         body.put("description", "description2");
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .post("http://localhost:4567/todos");
+                .body(body.toString())
+                .post("http://localhost:4567/todos");
 
         int statusCode = response.getStatusCode();
         String actualTitle = response.getBody().jsonPath().getString("title");
@@ -144,8 +146,8 @@ public class testsTodo {
         body.put("notExistantField", "noField");
 
         Response response = RestAssured.given()
-                                  .body(body.toString())
-                                  .post("http://localhost:4567/todos");
+                .body(body.toString())
+                .post("http://localhost:4567/todos");
 
         int statusCode = response.getStatusCode();
         assertEquals(400, statusCode);
@@ -160,7 +162,7 @@ public class testsTodo {
     public void getTodosWithValidID() {
         int id = 1;
         Response response = RestAssured.given()
-                                       .get(url + "/todos/" + id);
+                               .get(url + "/todos/" + id);
 
         assertEquals(200, response.getStatusCode());
 
@@ -181,7 +183,7 @@ public class testsTodo {
     public void getTodosWithInvalidID() {
         int id = 10000;
         Response response = RestAssured.given()
-                                       .get(url + "/todos/" + id);
+                .get(url + "/todos/" + id);
 
         assertEquals(404, response.getStatusCode());
     }
@@ -191,16 +193,16 @@ public class testsTodo {
     public void headTodosWithValidID(){
         int id = 1;
         Response response = RestAssured.given()
-                                       .head(url + "/todos/" + id);
+                .head(url + "/todos/" + id);
 
         assertEquals(200,response.getStatusCode());
     }
-    
+
     @Test
     public void headTodosWithInValidID(){
         int id = 1000;
         Response response = RestAssured.given()
-                                       .head(url + "/todos/" + id);
+                .head(url + "/todos/" + id);
 
         assertEquals(404,response.getStatusCode());
     }
@@ -217,8 +219,8 @@ public class testsTodo {
         body.put("doneStatus", false);
 
         Response response = RestAssured.given()
-                                  .body(body.toString())
-                                  .post(url + "/todos/" + id);
+                .body(body.toString())
+                .post(url + "/todos/" + id);
 
 
         int statusCode = response.getStatusCode();
@@ -261,8 +263,8 @@ public class testsTodo {
         body.put("doneStatus", false);
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .post(url  + "/todos/" + id);
+                .body(body.toString())
+                .post(url  + "/todos/" + id);
 
 
         int statusCode = response.getStatusCode();
@@ -284,8 +286,8 @@ public class testsTodo {
 
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .post(url + "/todos/"+ id);
+                .body(body.toString())
+                .post(url + "/todos/"+ id);
 
 
         int statusCode = response.getStatusCode();
@@ -307,8 +309,8 @@ public class testsTodo {
 
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .post(url + "/todos/"+ id);
+                .body(body.toString())
+                .post(url + "/todos/"+ id);
 
 
         int statusCode = response.getStatusCode();
@@ -389,8 +391,8 @@ public class testsTodo {
 
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .put(url + "/todos/" + id);
+                .body(body.toString())
+                .put(url + "/todos/" + id);
 
 
         int statusCode = response.getStatusCode();
@@ -414,8 +416,8 @@ public class testsTodo {
 
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .put(url +"/todos/" + id);
+                .body(body.toString())
+                .put(url +"/todos/" + id);
 
 
         int statusCode = response.getStatusCode();
@@ -433,8 +435,8 @@ public class testsTodo {
 
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .put(url+ "/todos/" + id);
+                .body(body.toString())
+                .put(url+ "/todos/" + id);
 
 
         int statusCode = response.getStatusCode();
@@ -491,8 +493,8 @@ public class testsTodo {
 
 
         Response response_put = RestAssured.given()
-                                           .body(body.toString())
-                                           .put(url + "/todos/" + id_put);
+                .body(body.toString())
+                .put(url + "/todos/" + id_put);
 
 
         int statusCode = response_put.getStatusCode();
@@ -546,7 +548,7 @@ public class testsTodo {
     public void deleteTodosWithGoodID(){
         int id = 2;
         Response response = RestAssured.given()
-                                       .delete(url + "/todos/" +id);
+                .delete(url + "/todos/" +id);
 
         int statusCode = response.getStatusCode();
         assertEquals(200,statusCode);
@@ -557,7 +559,7 @@ public class testsTodo {
     public void DeleteNoMoreExistingTodo(){
         int id = 10000;
         Response response = RestAssured.given()
-                                       .delete(url + "/todos/" + id);
+                .delete(url + "/todos/" + id);
 
         int statusCode = response.getStatusCode();
         assertEquals(404,statusCode);
@@ -573,8 +575,8 @@ public class testsTodo {
         body.put("doneStatus1", false);
 
         Response response = RestAssured.given()
-                                       .body(body.toString())
-                                       .post("http://localhost:4567/todos/1");
+                .body(body.toString())
+                .post("http://localhost:4567/todos/1");
 
 
         int statusCode = response.getStatusCode();
@@ -583,30 +585,30 @@ public class testsTodo {
 
     // Test with malformated XML
     @Test
-	public void malformatedXML() throws Exception {
+    public void malformatedXML() throws Exception {
 
-	    String invalidXmlPayload = "<todo><title>New Todo</title><doneStatus>false</description></todo>";
-
-
-	    Response response = RestAssured.given()
-                                       .header("Accept", ContentType.XML)
-	                                   .contentType(ContentType.XML)
-                                       .body(invalidXmlPayload)
-                                       .when()
-                                       .post("http://localhost:4567/todos");
+        String invalidXmlPayload = "<todo><title>New Todo</title><doneStatus>false</description></todo>";
 
 
-	    assertEquals(400, response.getStatusCode(), "API should return 400 Bad Request for invalid XML");
-	}
+        Response response = RestAssured.given()
+                .header("Accept", ContentType.XML)
+                .contentType(ContentType.XML)
+                .body(invalidXmlPayload)
+                .when()
+                .post("http://localhost:4567/todos");
+
+
+        assertEquals(400, response.getStatusCode(), "API should return 400 Bad Request for invalid XML");
+    }
 
     // Check if it can get a XML response
     @Test
     void testTodoGetRequestXMLPayload() {
 
         Response response = RestAssured.given()
-                                       .accept(ContentType.XML) // Request XML response
-                                       .when()
-                                       .get("http://localhost:4567/todos/1");
+                .accept(ContentType.XML) // Request XML response
+                .when()
+                .get("http://localhost:4567/todos/1");
 
         assertEquals(200, response.getStatusCode());
         assertEquals("application/xml", response.getContentType());

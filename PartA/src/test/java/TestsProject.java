@@ -513,36 +513,6 @@ public class TestsProject {
 
         assertEquals(404,response.getStatusCode());
     }
-
-    // Bug
-    @Test
-    public void putProjectsWithMissingTitleValidId() {
-        int id = 1;
-
-        JSONObject body = new JSONObject();
-        body.put("completed", false);
-        body.put("active", false);
-        body.put("description", "description2");
-
-        Response response = RestAssured.given()
-                .body(body.toString())
-                .put(url + "/projects/" + id);
-
-        assertEquals(200,response.getStatusCode());
-
-        String actualId = response.getBody().jsonPath().getString("id");
-        String actualTitle = response.getBody().jsonPath().getString("title");
-        String actualCompleted = response.getBody().jsonPath().getString("completed");
-        String actualActive = response.getBody().jsonPath().getString("active");
-        String actualDescription = response.getBody().jsonPath().getString("description");
-
-        assertEquals("1", actualId);
-        assertEquals("Office Work", actualTitle);
-        assertEquals("false", actualCompleted);
-        assertEquals("false", actualActive);
-        assertEquals("description2", actualDescription);
-    }
-
     // Bug behaviour
     @Test
     public void putProjectsWithMissingTitleValidIdActualBehaviour() {
@@ -567,6 +537,35 @@ public class TestsProject {
 
         assertEquals("1", actualId);
         assertEquals("", actualTitle);
+        assertEquals("false", actualCompleted);
+        assertEquals("false", actualActive);
+        assertEquals("description2", actualDescription);
+    }
+
+    // Expected Behavior of bug
+    @Test
+    public void putProjectsWithMissingTitleValidId() {
+        int id = 1;
+
+        JSONObject body = new JSONObject();
+        body.put("completed", false);
+        body.put("active", false);
+        body.put("description", "description2");
+
+        Response response = RestAssured.given()
+                .body(body.toString())
+                .put(url + "/projects/" + id);
+
+        assertEquals(200,response.getStatusCode());
+
+        String actualId = response.getBody().jsonPath().getString("id");
+        String actualTitle = response.getBody().jsonPath().getString("title");
+        String actualCompleted = response.getBody().jsonPath().getString("completed");
+        String actualActive = response.getBody().jsonPath().getString("active");
+        String actualDescription = response.getBody().jsonPath().getString("description");
+
+        assertEquals("1", actualId);
+        assertEquals("Office Work", actualTitle);
         assertEquals("false", actualCompleted);
         assertEquals("false", actualActive);
         assertEquals("description2", actualDescription);
